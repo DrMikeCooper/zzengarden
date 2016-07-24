@@ -29,4 +29,8 @@ public class Faller : MonoBehaviour {
     void PostApples()
     {
     }
+
+    void IContendPlums()
+    {
+    }
 }
