@@ -18,6 +18,10 @@ public class Faller : MonoBehaviour {
 
 	}
 
+    void PreApples()
+    {
+    }
+
     void Apples()
     {
     }
