@@ -21,4 +21,8 @@ public class Faller : MonoBehaviour {
     void Apples()
     {
     }
+
+    void PostApples()
+    {
+    }
 }
