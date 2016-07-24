@@ -30,7 +30,12 @@ public class Faller : MonoBehaviour {
     {
     }
 
+
     void IContendPlums()
+    {
+    }
+
+    void ILikePlums()
     {
     }
 }
