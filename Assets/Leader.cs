@@ -15,5 +15,7 @@ public class Leader : MonoBehaviour {
 	void Update () {
         if (Input.GetKeyDown(KeyCode.P))
             follower.SetTarget(transform);
+        if (Input.GetKeyDown(KeyCode.O))
+            follower.SetTarget(null);
 	}
 }
