@@ -24,6 +24,7 @@ public class Faller : MonoBehaviour {
 
     void Apples()
     {
+        string nm = "desktop";
     }
 
     void PostApples()
