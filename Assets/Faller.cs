@@ -10,7 +10,7 @@ public class Faller : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (transform.position.y < -100)
+        if (transform.position.y < -60)
         {
             transform.position = new Vector3(0, 10, 0);
             GetComponent<Rigidbody>().velocity = new Vector3(0, 0, 0);
