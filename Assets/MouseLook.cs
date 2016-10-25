@@ -17,14 +17,22 @@ public class MouseLook : MonoBehaviour {
     private Quaternion m_CameraTargetRot;
     private bool m_cursorIsLocked = true;
 
+
+    // Use this for initialization
     void Start()
     {
+        
         Init(transform.parent.transform, Camera.main.transform);
     }
 
     void Update()
     {
         LookRotation(transform.parent.transform, Camera.main.transform);
+
+        // animnate the skybox
+        float timer = 12.0f * Mathf.Sin(Time.time * 0.01f);
+        RenderSettings.skybox.SetFloat("_Timer", timer);
+
     }
 
     public void Init(Transform character, Transform camera)
