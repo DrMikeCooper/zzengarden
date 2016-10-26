@@ -18,9 +18,10 @@ public class ZenTree : MonoBehaviour {
         for (int i = 0; i < growing.Count; i++)
         {
             GameObject obj = growing[i] as GameObject;
+            ZenBranch br = obj.GetComponent<ZenBranch>();
 
             float scale = obj.transform.localScale.x;
-            scale += 0.005f;
+            scale += br.speed;
             obj.transform.localScale = new Vector3(scale, scale, scale);
             if (scale >= 1.0f)
             {
@@ -28,7 +29,7 @@ public class ZenTree : MonoBehaviour {
                 {
                     Transform ch = obj.transform.GetChild(k);
                     if (ch.GetComponent<MeshRenderer>() == null)
-                        GrowChild(ch.gameObject, 1);
+                        GrowChild(ch.gameObject, br.generation + 1);
                 }
                 growing.Remove(obj);
             }
@@ -40,12 +41,16 @@ public class ZenTree : MonoBehaviour {
         if (counter > 4)
             return;
 
-        GameObject branch = branchSet[Random.Range(0, branchSet.Length - 1)];
+        GameObject branch = branchSet[Random.Range(0, branchSet.Length)];
         GameObject child = Instantiate(branch);
         child.transform.parent = root.transform;
         child.transform.localPosition = new Vector3(0, 0, 0);
         child.transform.localRotation = new Quaternion();
         child.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+
+        ZenBranch br = child.GetComponent<ZenBranch>();
+        br.generation = counter;
+ 
         growing.Add(child);
     }
 }

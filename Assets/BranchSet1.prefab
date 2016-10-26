@@ -58,6 +58,7 @@ GameObject:
   - 33: {fileID: 33000012695395318}
   - 135: {fileID: 135000011992846704}
   - 23: {fileID: 23000012580345024}
+  - 114: {fileID: 114000013562983048}
   m_Layer: 0
   m_Name: BranchSet1
   m_TagString: Untagged
@@ -369,6 +370,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013870348642}
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &114000013562983048
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011338351978}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: baf5a093ba53c1b4988b9183c08c516f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isLeaf: 0
+  generation: 0
+  speed: 0.01
 --- !u!135 &135000011992846704
 SphereCollider:
   m_ObjectHideFlags: 1
