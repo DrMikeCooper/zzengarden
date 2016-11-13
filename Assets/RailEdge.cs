@@ -8,7 +8,7 @@ public class RailEdge : MonoBehaviour {
 
     public Vector3 direction;
     public float span;
-
+    public float width = 0.1f;
     
 	// Use this for initialization
 	void Start () {
@@ -28,6 +28,9 @@ public class RailEdge : MonoBehaviour {
     LineRenderer line = null;
     void DebugDraw()
     {
+        if (width > 0.1f)
+            width -= 0.01f;
+
         if (line == null)
         {
             line = gameObject.AddComponent<LineRenderer>();
@@ -37,5 +40,6 @@ public class RailEdge : MonoBehaviour {
             pos[1] = node2.transform.position;
             line.SetPositions(pos);
         }
+        line.SetWidth(width, width);
     }
 }

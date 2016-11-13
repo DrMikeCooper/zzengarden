@@ -23,6 +23,8 @@ public class RailUser : MonoBehaviour {
 
         float angle = cam.eulerAngles.x;
         Vector3 gaze = cam.forward;
+        bool switched = true;
+        RailEdge bestEdge = null;
         if (angle > 10 && angle < 25) // ducking our head, so move forwards
         {
             // along an edge either way if we're on one
@@ -53,7 +55,7 @@ public class RailUser : MonoBehaviour {
             if (currentNode != null)
             {
                 float bestDot = 0.9f;
-                RailEdge bestEdge = null;
+
                 for (int i = 0; i < currentNode.edges.Count; i++)
                 {
                     RailEdge edge = currentNode.edges[i] as RailEdge;
@@ -67,34 +69,39 @@ public class RailUser : MonoBehaviour {
                         bestEdge = edge;
                     }
                 }
-                bool switched = true;
+
                 if (bestEdge)
                 {
                     if (bestEdge == newEdge)
                     {
                         switched = false;
                         edgeTimer += Time.deltaTime;
+                        bestEdge.width = edgeTimer;
                         if (edgeTimer > 1.0f)
                         {
-
                             currentNode = null;
                             currentEdge = bestEdge;
                         }
                     }
                 }
-                if (switched)
-                {
-                    newEdge = bestEdge;
-                    edgeTimer = 0;
-                }
+
             }
+        }
+
+        if (switched)
+        {
+            newEdge = bestEdge;
+            edgeTimer = 0;
         }
 
         // update our position
         if (currentNode != null)
             transform.position = currentNode.transform.position;
         if (currentEdge != null)
+        {
+            currentEdge.width = 1;
             transform.position = Vector3.Lerp(currentEdge.node1.transform.position, currentEdge.node2.transform.position, alpha);
+        }
 
 	}
 }
