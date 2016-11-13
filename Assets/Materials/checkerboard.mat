@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Mandelbrot
-  m_Shader: {fileID: 4800000, guid: f8e5c3787acdf564f94e39ba23599437, type: 3}
+  m_Name: checkerboard
+  m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_CustomRenderQueue: -1
@@ -48,7 +48,7 @@ Material:
     - first:
         name: _MainTex
       second:
-        m_Texture: {fileID: 2800000, guid: f35fff6734d683f4da6fc659eba4bc36, type: 3}
+        m_Texture: {fileID: 2800000, guid: f2ab805e5cba3b94cac2865efdd5acba, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - first:
@@ -83,8 +83,14 @@ Material:
         name: _DstBlend
       second: 0
     - first:
+        name: _GlossMapScale
+      second: 1
+    - first:
         name: _Glossiness
       second: 0.5
+    - first:
+        name: _GlossyReflections
+      second: 1
     - first:
         name: _Metallic
       second: 0
@@ -95,23 +101,17 @@ Material:
         name: _OcclusionStrength
       second: 1
     - first:
-        name: _OriginX
-      second: 0.5
-    - first:
-        name: _OriginY
-      second: 0.5
-    - first:
         name: _Parallax
       second: 0.02
     - first:
-        name: _Scale
+        name: _SmoothnessTextureChannel
+      second: 0
+    - first:
+        name: _SpecularHighlights
       second: 1
     - first:
         name: _SrcBlend
       second: 1
-    - first:
-        name: _Timer
-      second: 6.006651
     - first:
         name: _UVSec
       second: 0

@@ -36,6 +36,7 @@ public class RailTraveller : MonoBehaviour {
                 nv.SetDestination(gaze.transform.position);
                 targetPosition = gaze.transform.position;
                 timer = 0;
+                iTween.ScaleBy(gaze.gameObject, iTween.Hash("y", 2, "loopType", "pingPong"));
             }
         }
         else
