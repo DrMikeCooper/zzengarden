@@ -532,7 +532,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1000013916728660, guid: 283cc68b7c3e5054db5aacaa72e7f7b5, type: 2}
       propertyPath: m_Name
-      value: Rail (2)
+      value: Rail (2) WW
       objectReference: {fileID: 0}
     - target: {fileID: 114000012051131276, guid: 283cc68b7c3e5054db5aacaa72e7f7b5,
         type: 2}
@@ -2608,6 +2608,54 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 437c660ab9024514c8c65af39e70a14c, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1545179493 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1000013916728660, guid: 283cc68b7c3e5054db5aacaa72e7f7b5,
+    type: 2}
+  m_PrefabInternal: {fileID: 284186943}
+--- !u!114 &1545179494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1545179493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aefa396d50d76d54297f3eb6c5aa02d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 1
+  start: 0
+  end: 6
+--- !u!114 &1545179497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1545179493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ea5b1033b9dbc841bf71c4eae60c36b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  templates:
+  - {fileID: 1000013830160030, guid: 437c660ab9024514c8c65af39e70a14c, type: 2}
+  spacing: 4
+  phase: 1
+--- !u!114 &1545179498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1545179493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeb302787b6a6f4488624bcf8e469784, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  t: 0
+  timeOffset: 0
+  keyFrames: []
 --- !u!1 &1628829603
 GameObject:
   m_ObjectHideFlags: 0

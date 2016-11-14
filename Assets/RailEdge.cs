@@ -12,6 +12,8 @@ public class RailEdge : MonoBehaviour {
 
     MeshFilter meshFilter = null;
 
+    bool drawMesh = true;
+
 	// Use this for initialization
 	void Start () {
         node1.edges.Add(this);
@@ -20,6 +22,18 @@ public class RailEdge : MonoBehaviour {
         direction = (node2.transform.position - node1.transform.position).normalized;
         span = (node2.transform.position - node1.transform.position).magnitude;
 
+        // make a child object with a MeshFilter and MeshRenderer
+        if (drawMesh)
+        {
+            GameObject child = new GameObject();
+            meshFilter = child.AddComponent<MeshFilter>();
+            meshFilter.mesh = ProcMeshes.GetSquare();
+            meshFilter.mesh.uv = ProcMeshes.GetSquareUV(span);
+            MeshRenderer mr = child.AddComponent<MeshRenderer>();
+            child.transform.parent = transform;
+            child.name = name + "_fx";
+            // todo material
+        }
     }
 	
 	// Update is called once per frame
@@ -32,15 +46,11 @@ public class RailEdge : MonoBehaviour {
         if (width > 0.1f)
             width -= 0.01f;
 
-        if (meshFilter == null)
+        if (meshFilter != null)
         {
-            meshFilter = GetComponent<MeshFilter>();
-            meshFilter.mesh = ProcMeshes.GetSquare();
-            meshFilter.mesh.uv = ProcMeshes.GetSquareUV(span);
-            transform.position = 0.5f * (node2.transform.position + node1.transform.position);
-            transform.forward = direction;
+            meshFilter.transform.position = 0.5f * (node2.transform.position + node1.transform.position);
+            meshFilter.transform.forward = direction;
+            meshFilter.transform.localScale = new Vector3(width * 0.5f, 1, span * 0.5f);
         }
-
-        transform.localScale = new Vector3(width * 0.5f, 1, span * 0.5f);
     }
 }

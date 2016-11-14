@@ -26,7 +26,7 @@ public class LPiece : MonoBehaviour {
     void Start() {
 
         startPos = transform.localPosition;
-        //startAngles = transform.eulerAngles;
+        startAngles = transform.localEulerAngles;
 
         // search our immediate children for LPieces and store this list
         ArrayList list = new ArrayList();
@@ -50,7 +50,8 @@ public class LPiece : MonoBehaviour {
                 Debug.Log("Bad Keyframe Sequence");
         }
 
-        MoveMeshToChild();
+        if (GetComponent<RailEdge>() == null)
+            MoveMeshToChild();
 	}
 
     void MoveMeshToChild()
