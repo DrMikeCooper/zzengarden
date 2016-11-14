@@ -9,7 +9,9 @@ public class RailEdge : MonoBehaviour {
     public Vector3 direction;
     public float span;
     public float width = 0.1f;
-    
+
+    MeshFilter meshFilter = null;
+
 	// Use this for initialization
 	void Start () {
         node1.edges.Add(this);
@@ -25,21 +27,20 @@ public class RailEdge : MonoBehaviour {
         DebugDraw();
 	}
 
-    LineRenderer line = null;
     void DebugDraw()
     {
         if (width > 0.1f)
             width -= 0.01f;
 
-        if (line == null)
+        if (meshFilter == null)
         {
-            line = gameObject.AddComponent<LineRenderer>();
-            line.SetColors(Color.yellow, Color.yellow);
-            Vector3[] pos = new Vector3[2];
-            pos[0] = node1.transform.position;
-            pos[1] = node2.transform.position;
-            line.SetPositions(pos);
+            meshFilter = GetComponent<MeshFilter>();
+            meshFilter.mesh = ProcMeshes.GetSquare();
+            meshFilter.mesh.uv = ProcMeshes.GetSquareUV(span);
+            transform.position = 0.5f * (node2.transform.position + node1.transform.position);
+            transform.forward = direction;
         }
-        line.SetWidth(width, width);
+
+        transform.localScale = new Vector3(width * 0.5f, 1, span * 0.5f);
     }
 }
