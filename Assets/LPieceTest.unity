@@ -1796,6 +1796,48 @@ Transform:
   m_PrefabParentObject: {fileID: 4000011834081836, guid: 437c660ab9024514c8c65af39e70a14c,
     type: 2}
   m_PrefabInternal: {fileID: 862272930}
+--- !u!1001 &1055933068
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4000010518960476, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: -6.58701
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010518960476, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -0.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010518960476, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 11.116023
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010518960476, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010518960476, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010518960476, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010518960476, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000010518960476, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1060681535
 GameObject:
   m_ObjectHideFlags: 0
@@ -2626,7 +2668,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 1
   start: 0
-  end: 6
+  end: 20
 --- !u!114 &1545179497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2639,6 +2681,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   templates:
+  - {fileID: 1000012079696038, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
+  - {fileID: 1000012079696038, guid: 8d3e24a47ab84fe43a2e0f9b54f104b1, type: 2}
   - {fileID: 1000013830160030, guid: 437c660ab9024514c8c65af39e70a14c, type: 2}
   spacing: 4
   phase: 1
