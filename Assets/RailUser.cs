@@ -25,12 +25,25 @@ public class RailUser : MonoBehaviour {
         Vector3 gaze = cam.forward;
         bool switched = true;
         RailEdge bestEdge = null;
-        if (angle > 10 && angle < 25) // ducking our head, so move forwards
+
+        
+        int currentEnd = 0;
+        float gazeDot = 0;
+        if (currentEdge != null)
+        {
+            gazeDot = Vector3.Dot(gaze, currentEdge.direction);
+            if (alpha > 0.9f && gazeDot > 0)
+                currentEnd = 1;
+            if (alpha < 0.1f && gazeDot < 0)
+                currentEnd = -1;
+        }
+
+        if ((angle > 10 && angle < 25) || currentEnd !=0) // ducking our head, so move forwards
         {
             // along an edge either way if we're on one
             if (currentEdge != null)
             {
-                if (Vector3.Dot(gaze, currentEdge.direction) > 0.9f)
+                if (gazeDot > 0.9f || currentEnd == 1)
                 {
                     alpha += speed / currentEdge.span * Time.deltaTime;
                     if (alpha >= 0.98f)
@@ -39,7 +52,7 @@ public class RailUser : MonoBehaviour {
                         currentEdge = null;
                     }
                 }
-                else if (Vector3.Dot(gaze, currentEdge.direction) < -0.9f)
+                else if (gazeDot < -0.9f || currentEnd == -1)
                 {
                     alpha -= speed / currentEdge.span * Time.deltaTime;
                     if (alpha <= 0.02f)
@@ -47,7 +60,6 @@ public class RailUser : MonoBehaviour {
                         currentNode = currentEdge.node1;
                         currentEdge = null;
                     }
-
                 }
             }
 
