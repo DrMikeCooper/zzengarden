@@ -3,9 +3,9 @@ using System.Collections;
 
 public class PuzzleRules : MonoBehaviour {
 
-    GridPuzzle puzzle = null;
+    protected GridPuzzle puzzle = null;
 
-    void SetPuzzle(GridPuzzle p)
+    public void SetPuzzle(GridPuzzle p)
     {
         puzzle = p;
     }

@@ -930,7 +930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b145d9874f3dccf47bcc1942483a37ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startNode: {fileID: 60601754}
+  startNode: {fileID: 1769037665}
   currentNode: {fileID: 0}
   currentEdge: {fileID: 0}
   newEdge: {fileID: 0}
@@ -991,7 +991,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 481528629}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 10, y: 0, z: -26.47}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:

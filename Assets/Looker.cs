@@ -40,7 +40,7 @@ public class Looker : MonoBehaviour {
 
         if (reticle)
         {
-            float scale = current == null ? 0 : current.alpha / current.activationTime;
+            float scale = current == null ? 0 : 0.5f * current.alpha / current.activationTime;
             reticle.localScale = new Vector3(scale, scale, scale);
         }
 
