@@ -33,7 +33,8 @@ public class Looker : MonoBehaviour {
         }
         else
         {
-            current.Grow(Time.deltaTime);
+            if (current)
+                current.Grow(Time.deltaTime);
         }
 
 	}
