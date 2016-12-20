@@ -11,6 +11,8 @@ public class GridPuzzle : MonoBehaviour {
     [HideInInspector]
     GridPuzzlePiece current;
 
+    PuzzleRules rules;
+
     AudioSource audioSource;
     public AudioClip sparkle;
     public AudioClip select;
@@ -36,6 +38,8 @@ public class GridPuzzle : MonoBehaviour {
         }
 
         audioSource = GetComponent<AudioSource>();
+        rules = GetComponent<PuzzleRules>();
+        rules.SetPuzzle(this);
 	}
 	
 	// Update is called once per frame
@@ -90,14 +94,22 @@ public class GridPuzzle : MonoBehaviour {
                 //current.transform.position = pos;
                 //current.transform.localScale = new Vector3(1, 1, 1);
 
-                iTween.ScaleTo(current.gameObject, iTween.Hash("time", 1, "scale", new Vector3(1, 1, 1), "easeType", "easeOutBack"));
-                iTween.MoveTo(piece.gameObject, iTween.Hash("position", current.transform.position, "time", 0.5, "easeType", "easeInOutCirc"));
-                iTween.MoveTo(current.gameObject, iTween.Hash("position", piece.transform.position, "time", 0.5, "easeType", "easeInOutCirc"));
-                piece.Sparkle();
-                current.Sparkle();
-                audioSource.clip = sparkle;
-                audioSource.Play();
+                if (rules.TryMove(current, piece))
+                {
+                    iTween.MoveTo(piece.gameObject, iTween.Hash("position", current.transform.position, "time", 0.5, "easeType", "easeInOutCirc"));
+                    iTween.MoveTo(current.gameObject, iTween.Hash("position", piece.transform.position, "time", 0.5, "easeType", "easeInOutCirc"));
+                    piece.Sparkle();
+                    current.Sparkle();
+                    audioSource.clip = sparkle;
+                    rules.PostMove(current, piece);
+                }
+                else
+                {
+                    audioSource.clip = deselect;
+                }
 
+                audioSource.Play();
+                iTween.ScaleTo(current.gameObject, iTween.Hash("time", 1, "scale", new Vector3(1, 1, 1), "easeType", "easeOutBack"));
                 current = null;
             }
         }

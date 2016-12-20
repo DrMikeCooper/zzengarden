@@ -92,6 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ff1a710cd3bd947af7e0c14ef90ff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  alpha: 0
   activationTime: 1
   puzzle: {fileID: 0}
 --- !u!135 &135000011376742302
