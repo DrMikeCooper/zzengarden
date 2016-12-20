@@ -4,6 +4,7 @@ using System.Collections;
 public class Looker : MonoBehaviour {
 
     Lookable current;
+    public Transform reticle;
 
 	// Use this for initialization
 	void Start () {
@@ -35,6 +36,12 @@ public class Looker : MonoBehaviour {
         {
             if (current)
                 current.Grow(Time.deltaTime);
+        }
+
+        if (reticle)
+        {
+            float scale = current == null ? 0 : current.alpha / current.activationTime;
+            reticle.localScale = new Vector3(scale, scale, scale);
         }
 
 	}

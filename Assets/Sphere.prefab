@@ -25,7 +25,7 @@ GameObject:
   - 114: {fileID: 114000013778679290}
   - 198: {fileID: 198000013234560118}
   - 199: {fileID: 199000013145865698}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -89,9 +89,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1000013580848166}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7df76987f9bade94b934e840e28bdfd3, type: 3}
+  m_Script: {fileID: 11500000, guid: 05ff1a710cd3bd947af7e0c14ef90ff0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activationTime: 1
   puzzle: {fileID: 0}
 --- !u!135 &135000011376742302
 SphereCollider:
