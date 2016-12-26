@@ -190,7 +190,7 @@ public class GridPuzzle : MonoBehaviour {
         UpdatePieces();
         GridPuzzlePiece[,] pieces0 = new GridPuzzlePiece[columns, rows];
         for (int i = 0; i < columns; i++)
-            for (int j = 1; j < rows; j++)
+            for (int j = 0; j < rows; j++)
                 pieces0[i, j] = pieces[i, j];
 
         // remove all those that should go
@@ -212,7 +212,8 @@ public class GridPuzzle : MonoBehaviour {
                     // if the one below is empty and you're not, fall down one square!
                     if (pieces[i, j] != null && pieces[i, j - 1] == null)
                     {
-                        Swap(pieces0[i, j], pieces0[i, j - 1], 1);
+                        Swap(pieces0[i, j], pieces0[i, j - 1], 0);
+                        GridPuzzlePiece gpp0 = pieces0[i, j]; pieces0[i, j] = pieces0[i, j - 1]; pieces[i, j - 1] = gpp0;
                         pieces[i, j - 1] = pieces[i, j];
                         pieces[i, j] = null;
                         done = false;
@@ -231,13 +232,13 @@ public class GridPuzzle : MonoBehaviour {
                 if (pieces[i, j] == null)
                 {
                     pieces[i, j] = removes[k] as GridPuzzlePiece; k++;
-                    pieces[i, j].MoveTo(positions[i,j], 1, 0.1f);
                     pieces[i, j].ScaleTo(1, 2);
-                    pieces[i, j].x0 = i;
-                    pieces[i, j].y0 = j;
                     pieces[i, j].index = Random.Range(0, 4);
                     pieces[i, j].GetComponent<MeshRenderer>().material.color = colors[pieces[i, j].index];
                 }
+                pieces[i, j].MoveTo(positions[i, j], 1, 0.1f);
+                pieces[i, j].x0 = i;
+                pieces[i, j].y0 = j;
             }
         }
 
