@@ -3,20 +3,29 @@ using System.Collections;
 
 public class PuzzleConsole : Lookable {
 
-    Transform puzzle;
+    GridPuzzle puzzle;
     Transform player;
     bool activated = false;
+    public int[] scores;
+    bool firstUpdate = true;
 
 	// Use this for initialization
 	void Start () {
-        puzzle = GetComponentInChildren<GridPuzzle>().transform;
-        puzzle.localScale = new Vector3(0, 0, 0);
+        puzzle = GetComponentInChildren<GridPuzzle>();
+        puzzle.console = this;
+        scores = new int[puzzle.numTypes];
         player = GameObject.FindGameObjectWithTag("Player").transform;
         activated = false;
     }
 
     void Update()
     {
+        if (firstUpdate)
+        {
+            firstUpdate = false;
+            puzzle.transform.localScale = new Vector3(0, 0, 0);
+        }
+
         if (activated)
         {
             if ((transform.position - player.position).magnitude > 3.0f)

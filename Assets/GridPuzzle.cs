@@ -11,6 +11,7 @@ public class GridPuzzle : MonoBehaviour {
     // the template for spawning pieces (to be replaced by array later)
     public GameObject piece;
     Color[] colors = { Color.red, Color.blue, Color.cyan, Color.yellow };
+    public int numTypes = 4;
 
     // currently selected piece
     GridPuzzlePiece current;
@@ -37,6 +38,8 @@ public class GridPuzzle : MonoBehaviour {
     // list of all pieces to remove
     ArrayList removes = new ArrayList();
     float pieceScale = 1;
+
+    public PuzzleConsole console;
 
     enum State
     {
@@ -288,6 +291,7 @@ public class GridPuzzle : MonoBehaviour {
                 // matches now contains a big list of all matching pieces touching this one.
                 if (matches.Count >= size)
                 {
+                    console.scores[currentIndex] += matches.Count + 1 - size;
                     foreach (GridPuzzlePiece gpp in matches)
                     {
                         if (!removes.Contains(gpp))
@@ -336,6 +340,9 @@ public class GridPuzzle : MonoBehaviour {
                 CheckForRow(i, j, size, 1, 1, matches);
                 CheckForRow(i, j, size, 1, -1, matches);
 
+                if (matches.Count >= size)
+                    console.scores[currentIndex] += matches.Count + 1 - size;
+
                 // matches now contains a big list of all matching pieces touching this one.
                 foreach (GridPuzzlePiece gpp in matches)
                 {
@@ -351,12 +358,12 @@ public class GridPuzzle : MonoBehaviour {
 
     void CheckForRow(int i, int j, int size, int di, int dj, ArrayList matches)
     {
-        int index0 = pieces[i, j].index;
-        if (i >= -size * di && i <= columns - size * di && j >= -size * dj && j <= rows - size * dj)
+        currentIndex = pieces[i, j].index;
+        if (i >= -size * di-1 && i <= columns - size * di && j >= -size * dj-1 && j <= rows - size * dj)
         {
             for (int k = 1; k < size; k++)
             {
-                if (pieces[i + di * k, j + dj * k].index != index0)
+                if (pieces[i + di * k, j + dj * k].index != currentIndex)
                     return;
             }
 
