@@ -6,10 +6,11 @@ public class GridPuzzlePiece : Lookable {
     [HideInInspector]
     public GridPuzzle puzzle;
 
-    public int index; // which piece this one is
+    public int index; // which piece this one is, eg what colour or shape
     public int x0;
     public int y0;
-	// Use this for initialization
+
+    // Use this for initialization
 	void Start () {
 	
 	}

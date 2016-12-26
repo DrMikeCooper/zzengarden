@@ -1,29 +1,54 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof(AudioSource))]
+[RequireComponent(typeof(AudioSource))]
 public class GridPuzzle : MonoBehaviour {
 
+    // size of the grid
     public int columns;
     public int rows;
-    public GameObject piece;
 
-    [HideInInspector]
+    // the template for spawning pieces (to be replaced by array later)
+    public GameObject piece;
+    Color[] colors = { Color.red, Color.blue, Color.cyan, Color.yellow };
+
+    // currently selected piece
     GridPuzzlePiece current;
 
+    // details of the type of puzzle - sibling component
     PuzzleRules rules;
 
+    // sound and particles
     AudioSource audioSource;
     public AudioClip sparkle;
     public AudioClip select;
     public AudioClip deselect;
 
+    // unchanging list of all gameobject pieces
     GridPuzzlePiece[] pieceList;
+
+    // array of which pieces are where currently by row and column
     GridPuzzlePiece[,] pieces;
+
+    // unchanging list of positions for i,j th piece on grid
     Vector3[,] positions;
     int currentIndex;
 
-    Color[] colors = { Color.red, Color.blue, Color.cyan, Color.yellow };
+    // list of all pieces to remove
+    ArrayList removes = new ArrayList();
+    float pieceScale = 1;
+
+    enum State
+    {
+        Collapsed,
+        Waiting,
+        Swapping,
+        Vanishing, 
+        Moving,
+        Refilling
+    };
+
+    State state;
 
     public Vector3 GetPos(int i, int j)
     {
@@ -61,10 +86,35 @@ public class GridPuzzle : MonoBehaviour {
         audioSource = GetComponent<AudioSource>();
         rules = GetComponent<PuzzleRules>();
         rules.SetPuzzle(this);
+
+        state = State.Waiting;
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    void Update()
+    {
+        switch (state)
+        {
+            case State.Waiting:
+                UpdateWaiting();
+                break;
+            case State.Swapping:
+                UpdateSwapping();
+                break;
+            case State.Vanishing:
+                UpdateVanishing();
+                break;
+            case State.Moving:
+                UpdateMoving();
+                break;
+            case State.Refilling:
+                UpdateRefilling();
+                break;
+        }
+    }
+
+	// Ready for player input
+	void UpdateWaiting()
+    {
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -81,14 +131,87 @@ public class GridPuzzle : MonoBehaviour {
         }
 	}
 
+    void UpdateSwapping()
+    {
+        pieceScale += Time.deltaTime;
+        if (pieceScale >= 1.0f)
+        {
+            pieceScale = 1.0f;
+            state = State.Waiting;
+            rules.PostMove();
+        }
+    }
+
+    // making pieces disappear
+    void UpdateVanishing()
+    {
+        pieceScale -= 2*Time.deltaTime;
+        if (pieceScale < 0.0f)
+        {
+            pieceScale = 0.0f;
+            state = State.Moving;
+
+            // update colours for all removed pieces
+            foreach (GridPuzzlePiece gpp in removes)
+            {
+                gpp.GetComponent<MeshRenderer>().material.color = colors[gpp.index];
+            }
+        }
+
+        // scale all pieces that are vanishing
+        foreach (GridPuzzlePiece gpp in removes)
+        {
+            gpp.transform.localScale = new Vector3(pieceScale, pieceScale, pieceScale);
+        }
+      
+    }
+
+    // moving everything to its new position determined by (x0,y0) in the piece
+    void UpdateMoving()
+    {
+        bool stillMoving = false;
+        // move all pieces towards their destination point
+        foreach (GridPuzzlePiece gpp in pieceList)
+        {
+            Vector3 target = positions[gpp.x0, gpp.y0];
+            gpp.transform.position = Vector3.MoveTowards(gpp.transform.position, target, 2*Time.deltaTime);
+            if ((target - gpp.transform.position).magnitude > 0.0001f)
+                stillMoving = true;
+
+        }
+
+        if (!stillMoving)
+            state = State.Refilling;
+    }
+
+    // scaling up the pieces
+    void UpdateRefilling()
+    {
+        pieceScale += 2*Time.deltaTime;
+        if (pieceScale > 1.0f)
+        {
+            pieceScale = 1.0f;
+            state = State.Waiting;
+
+            // process again
+            rules.PostMove();
+        }
+
+        // scale all pieces that are vanishing
+        foreach (GridPuzzlePiece gpp in removes)
+        {
+            gpp.transform.localScale = new Vector3(pieceScale, pieceScale, pieceScale);
+        }
+    }
+
     public void ClickOnPiece(GridPuzzlePiece piece)
     {
+        if (state != State.Waiting)
+            return;
+
         if (piece == current)
         {
             current = null;
-
-            // shrink back down
-            //piece.transform.localScale = new Vector3(1, 1, 1);
 
             piece.ScaleTo(1);
             audioSource.clip = deselect;
@@ -100,21 +223,12 @@ public class GridPuzzle : MonoBehaviour {
             {
                 current = piece;
 
-                // scale up
-                //piece.transform.localScale = new Vector3(1.4f, 1.4f, 1.4f);
-
                 piece.ScaleTo(1.4f);
                 audioSource.clip = select;
                 audioSource.Play();
             }
             else
             {
-                // swap piece and current and scale current down
-                //Vector3 pos = piece.transform.position;
-                //piece.transform.position = current.transform.position;
-                //current.transform.position = pos;
-                //current.transform.localScale = new Vector3(1, 1, 1);
-
                 if (rules.TryMove(current, piece))
                 {
                     Swap(piece, current);
@@ -122,7 +236,8 @@ public class GridPuzzle : MonoBehaviour {
                     current.Sparkle();
                     audioSource.clip = sparkle;
 
-                    rules.PostMove(current, piece);
+                    state = State.Swapping;
+                    pieceScale = 0;
                 }
                 else
                 {
@@ -156,10 +271,8 @@ public class GridPuzzle : MonoBehaviour {
 
     public void RemoveBlocks(int size)
     {
-        // list of all pieces to remove
-        ArrayList removes = new ArrayList();
-
         ArrayList matches = new ArrayList();
+        removes.Clear();
 
         // figure out which pieces are due to be removed
         for (int i = 0; i < columns; i++)
@@ -186,7 +299,12 @@ public class GridPuzzle : MonoBehaviour {
             }
         }
 
-        // process the pieces
+        if (removes.Count == 0)
+            return;
+
+        state = State.Vanishing;
+
+        // process the pieces - make a copy of their original settings
         UpdatePieces();
         GridPuzzlePiece[,] pieces0 = new GridPuzzlePiece[columns, rows];
         for (int i = 0; i < columns; i++)
@@ -197,10 +315,9 @@ public class GridPuzzle : MonoBehaviour {
         foreach (GridPuzzlePiece gpp in removes)
         {
             pieces[gpp.x0, gpp.y0] = null;
-            gpp.ScaleTo(0);
         }
 
-        // move everything remaining down to fill the gaps
+        // move everything remaining down to fill the gaps, just mixing up the pieces/pieces0 arrays here
         bool done = false;
         while (!done)
         {
@@ -212,8 +329,7 @@ public class GridPuzzle : MonoBehaviour {
                     // if the one below is empty and you're not, fall down one square!
                     if (pieces[i, j] != null && pieces[i, j - 1] == null)
                     {
-                        Swap(pieces0[i, j], pieces0[i, j - 1], 0);
-                        GridPuzzlePiece gpp0 = pieces0[i, j]; pieces0[i, j] = pieces0[i, j - 1]; pieces[i, j - 1] = gpp0;
+                        GridPuzzlePiece gpp0 = pieces0[i, j]; pieces0[i, j] = pieces0[i, j - 1]; pieces0[i, j - 1] = gpp0;
                         pieces[i, j - 1] = pieces[i, j];
                         pieces[i, j] = null;
                         done = false;
@@ -222,26 +338,21 @@ public class GridPuzzle : MonoBehaviour {
             }
         }
 
-        // distribute the removed pieces into the holes
-        int k = 0;
+        // use pieces0 to fix everyone's x0, y0
         for (int i = 0; i < columns; i++)
         {
             for (int j = 0; j < rows; j++)
             {
-                // if the one below is empty and you're not, fall down one square!
-                if (pieces[i, j] == null)
-                {
-                    pieces[i, j] = removes[k] as GridPuzzlePiece; k++;
-                    pieces[i, j].ScaleTo(1, 2);
-                    pieces[i, j].index = Random.Range(0, 4);
-                    pieces[i, j].GetComponent<MeshRenderer>().material.color = colors[pieces[i, j].index];
-                }
-                pieces[i, j].MoveTo(positions[i, j], 1, 0.1f);
-                pieces[i, j].x0 = i;
-                pieces[i, j].y0 = j;
+                pieces0[i, j].x0 = i;
+                pieces0[i, j].y0 = j;
             }
         }
 
+        // distribute the removed pieces into the holes
+        foreach (GridPuzzlePiece gpp in removes)
+        {
+            gpp.index = Random.Range(0, 4);
+        }
     }
 
     void AddToMatches(int i, int j, ArrayList matches)

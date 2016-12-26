@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PuzzleRulesAccumulator : PuzzleRules {
 
-    public override void PostMove(GridPuzzlePiece a, GridPuzzlePiece b)
+    public override void PostMove()
     {
         puzzle.RemoveBlocks(4);
     }

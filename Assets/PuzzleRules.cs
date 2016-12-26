@@ -20,7 +20,7 @@ public class PuzzleRules : MonoBehaviour {
         return AreAdjacent(a,b);
     }
 
-    public virtual void PostMove(GridPuzzlePiece a, GridPuzzlePiece b)
+    public virtual void PostMove()
     {
         
     }
