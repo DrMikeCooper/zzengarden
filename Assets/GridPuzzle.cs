@@ -298,7 +298,79 @@ public class GridPuzzle : MonoBehaviour {
                 }
             }
         }
+        ProcessRemoves();
+    }
 
+    void AddToMatches(int i, int j, ArrayList matches)
+    {
+        if (pieces[i, j] && pieces[i, j].index == currentIndex)
+        {
+            matches.Add(pieces[i, j]);
+
+            pieces[i, j] = null;
+
+            // check 4 neighbours
+            if (i != 0) AddToMatches(i - 1, j, matches);
+            if (i != columns - 1) AddToMatches(i + 1, j, matches);
+            if (j != 0) AddToMatches(i, j - 1, matches);
+            if (j != rows - 1) AddToMatches(i, j + 1, matches);
+        }
+    }
+
+    public void RemoveRows(int size)
+    {
+        ArrayList matches = new ArrayList();
+        removes.Clear();
+
+        UpdatePieces();
+
+        // figure out which pieces are due to be removed
+        for (int i = 0; i < columns; i++)
+        {
+            for (int j = 0; j < rows; j++)
+            {
+                matches.Clear();
+
+                CheckForRow(i, j, size, 1, 0, matches);
+                CheckForRow(i, j, size, 0, 1, matches);
+                CheckForRow(i, j, size, 1, 1, matches);
+                CheckForRow(i, j, size, 1, -1, matches);
+
+                // matches now contains a big list of all matching pieces touching this one.
+                foreach (GridPuzzlePiece gpp in matches)
+                {
+                    if (!removes.Contains(gpp))
+                    {
+                        removes.Add(gpp);
+                    }
+                }
+            }
+        }
+        ProcessRemoves();
+    }
+
+    void CheckForRow(int i, int j, int size, int di, int dj, ArrayList matches)
+    {
+        int index0 = pieces[i, j].index;
+        if (i >= -size * di && i <= columns - size * di && j >= -size * dj && j <= rows - size * dj)
+        {
+            for (int k = 1; k < size; k++)
+            {
+                if (pieces[i + di * k, j + dj * k].index != index0)
+                    return;
+            }
+
+            // we have a row
+            for (int k = 0; k < size; k++)
+            {
+                GridPuzzlePiece gpp = pieces[i + di * k, j + dj * k];
+                matches.Add(gpp);
+            }
+        }
+    }
+
+    void ProcessRemoves()
+    { 
         if (removes.Count == 0)
             return;
 
@@ -352,22 +424,6 @@ public class GridPuzzle : MonoBehaviour {
         foreach (GridPuzzlePiece gpp in removes)
         {
             gpp.index = Random.Range(0, 4);
-        }
-    }
-
-    void AddToMatches(int i, int j, ArrayList matches)
-    {
-        if (pieces[i, j] && pieces[i, j].index == currentIndex)
-        {
-            matches.Add(pieces[i, j]);
-
-            pieces[i, j] = null;
-
-            // check 4 neighbours
-            if (i != 0) AddToMatches(i - 1, j, matches);
-            if (i != columns - 1) AddToMatches(i + 1, j, matches);
-            if (j != 0) AddToMatches(i, j - 1, matches);
-            if (j != rows - 1) AddToMatches(i, j + 1, matches);
         }
     }
 }

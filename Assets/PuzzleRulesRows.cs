@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PuzzleRulesAccumulator : PuzzleRules {
+public class PuzzleRulesRows : PuzzleRules {
 
     public int criticalMass = 4;
 
     public override void PostMove()
     {
-        puzzle.RemoveBlocks(criticalMass);
+        puzzle.RemoveRows(criticalMass);
     }
 }
