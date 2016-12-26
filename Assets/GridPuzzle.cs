@@ -10,7 +10,7 @@ public class GridPuzzle : MonoBehaviour {
 
     // the template for spawning pieces (to be replaced by array later)
     public GameObject piece;
-    Color[] colors = { Color.red, Color.blue, Color.cyan, Color.yellow };
+    public Color[] colors = { Color.red, Color.blue, Color.cyan, Color.yellow };
     public int numTypes = 4;
 
     // currently selected piece
@@ -291,14 +291,17 @@ public class GridPuzzle : MonoBehaviour {
                 // matches now contains a big list of all matching pieces touching this one.
                 if (matches.Count >= size)
                 {
-                    console.scores[currentIndex] += matches.Count + 1 - size;
+                    int num = 0;
                     foreach (GridPuzzlePiece gpp in matches)
                     {
                         if (!removes.Contains(gpp))
                         {
                             removes.Add(gpp);
+                            num++;
                         }
                     }
+                    if (num >= size)
+                        console.scores[currentIndex] += num + 1 - size;
                 }
             }
         }
