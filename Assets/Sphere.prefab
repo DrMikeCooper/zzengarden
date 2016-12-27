@@ -58,7 +58,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 7a25d134b853eea40bfe0ddda3c9734f, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_ProbeAnchor: {fileID: 0}
@@ -95,6 +95,9 @@ MonoBehaviour:
   alpha: 0
   activationTime: 1
   puzzle: {fileID: 0}
+  index: 0
+  x0: 0
+  y0: 0
 --- !u!135 &135000011376742302
 SphereCollider:
   m_ObjectHideFlags: 1
