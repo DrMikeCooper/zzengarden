@@ -18,7 +18,7 @@ public class Looker : MonoBehaviour {
         Lookable obj = null;
         Ray ray = new Ray(Camera.main.transform.position, Camera.main.transform.forward);
         RaycastHit hitInfo = new RaycastHit();
-        if (Physics.Raycast(ray, out hitInfo, 7.0f, 1 << 10))
+        if (Physics.Raycast(ray, out hitInfo, 8.0f, 1 << 10))
         {
             obj = hitInfo.transform.GetComponent<Lookable>();
         }

@@ -9,6 +9,7 @@ public class GridPuzzlePiece : Lookable {
     public int index; // which piece this one is, eg what colour or shape
     public int x0;
     public int y0;
+    public int pieceListIndex;
 
     // Use this for initialization
 	void Start () {

@@ -109,8 +109,6 @@ public class MorphBall : Morph {
 	// Update is called once per frame
 	void Update ()
     {
-        alpha = (0.5f + Mathf.Sin(Time.time));
-
         if (alpha != alphaLast)
         {
             if (alpha > 0) // morph from 0(cube) to 1 (sphere)

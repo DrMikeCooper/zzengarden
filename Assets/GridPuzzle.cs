@@ -9,9 +9,9 @@ public class GridPuzzle : MonoBehaviour {
     public int rows;
 
     // the template for spawning pieces (to be replaced by array later)
-    public GameObject piece;
+    public GameObject[] piece;
     public Color[] colors = { Color.red *0.5f, Color.blue *0.5f, Color.cyan *0.5f, Color.yellow*0.5f };
-    public int numTypes = 4;
+    public int numTypes;
 
     // currently selected piece
     GridPuzzlePiece current;
@@ -69,9 +69,10 @@ public class GridPuzzle : MonoBehaviour {
         return new Vector3(x0, y0, 0);
     }
 
-	// Use this for initialization
-	void Start () {
-        numTypes = 4; // TODO templates.Count;
+    // Use this for initialization
+    void Start()
+    {
+        numTypes = piece.Length;
 
         pieceList = new GridPuzzlePiece[columns * rows];
         pieces = new GridPuzzlePiece[columns, rows];
@@ -82,18 +83,15 @@ public class GridPuzzle : MonoBehaviour {
         {
             for (int j = 0; j < rows; j++)
             {
-                GameObject obj = Instantiate<GameObject>(piece);
-                obj.transform.parent = transform;
-                obj.transform.localPosition = GetPos(i, j);
+                int index = Random.Range(0, numTypes);
+
+                GameObject obj  = Create(index, i, j);
+                GridPuzzlePiece gpp = obj.GetComponent<GridPuzzlePiece>();
                 obj.transform.localRotation = Quaternion.identity;
                 positions[i, j] = obj.transform.position;
                 obj.name = "piece_" + i + "_" + j;
-                GridPuzzlePiece gpp = obj.GetComponent<GridPuzzlePiece>();
-                gpp.x0 = i;
-                gpp.y0 = j;
-                gpp.index = Random.Range(0, numTypes);
-                obj.GetComponent<MeshRenderer>().material.color = colors[gpp.index];
-                gpp.puzzle = this;
+
+                gpp.pieceListIndex = k;
                 pieceList[k] = gpp; k++;
             }
         }
@@ -116,7 +114,24 @@ public class GridPuzzle : MonoBehaviour {
             targetRots[i] = Quaternion.identity;
             lerps[i] = 1.1f;
         }
-	}
+    }
+
+    GameObject Create(int index, int i, int j)
+    {
+        GameObject obj = Instantiate<GameObject>(piece[index]);
+        GridPuzzlePiece gpp = obj.GetComponent<GridPuzzlePiece>();
+        gpp.index = index;
+        MeshRenderer mr = obj.GetComponent<MeshRenderer>();
+        if (mr == null)
+            mr = obj.GetComponentInChildren<MeshRenderer>();
+        mr.material.color = colors[gpp.index];
+        gpp.puzzle = this;
+        obj.transform.parent = transform;
+        obj.transform.localPosition = GetPos(i, j);
+        gpp.x0 = i;
+        gpp.y0 = j;
+        return obj;
+    }
 
     void Update()
     {
@@ -139,31 +154,32 @@ public class GridPuzzle : MonoBehaviour {
                 break;
         }
 
-        // update rotations and morphs for each type
-        for (int k = 0; k < numTypes; k++)
+        if (state != State.Vanishing)
         {
-            alphas[k] = 0.5f + Mathf.Sin((k + 1) * Time.time * 0.5f); // TODO?
+            // update rotations and morphs for each type
+            for (int k = 0; k < numTypes; k++)
+            {
+                alphas[k] = 0.5f + Mathf.Sin((k + 1) * Time.time * 0.5f); // TODO?
 
-            if (lerps[k] >= 1.0f)
-            {
-                lerps[k] = 0;
-                fromRots[k] = targetRots[k];
-                targetRots[k] = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+                if (lerps[k] >= 1.0f)
+                {
+                    lerps[k] = 0;
+                    fromRots[k] = targetRots[k];
+                    targetRots[k] = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+                }
+                else
+                {
+                    lerps[k] += Time.deltaTime * 0.1f * (8 - k);
+                    rotations[k] = Quaternion.Slerp(fromRots[k], targetRots[k], lerps[k]);
+                }
             }
-            else
+            foreach (GridPuzzlePiece gpp in pieceList)
             {
-                lerps[k] += Time.deltaTime * 0.1f * (8- k);
-                rotations[k] = Quaternion.Slerp(fromRots[k], targetRots[k], lerps[k]);
+                gpp.transform.localRotation = rotations[gpp.index];
+                Morph morph = gpp.GetComponent<Morph>();
+                if (morph)
+                    morph.alpha = alphas[gpp.index];
             }
-        }
-        bool first = true;
-        foreach (GridPuzzlePiece gpp in pieceList)
-        {
-            gpp.transform.rotation = rotations[gpp.index];
-            Morph morph = gpp.GetComponent<Morph>();
-            if (morph && first)
-                morph.alpha = alphas[gpp.index];
-            first = false;
         }
     }
 
@@ -206,11 +222,27 @@ public class GridPuzzle : MonoBehaviour {
             pieceScale = 0.0f;
             state = State.Moving;
 
+            ArrayList removesOld = new ArrayList();
+            ArrayList removesNew = new ArrayList();
+
             // update colours for all removed pieces
             foreach (GridPuzzlePiece gpp in removes)
             {
-                gpp.GetComponent<MeshRenderer>().material.color = colors[gpp.index];
+                // we need to recreate the piece here
+                GameObject obj = Create(gpp.index, gpp.x0, gpp.y0);
+                pieceList[gpp.pieceListIndex] = obj.GetComponent<GridPuzzlePiece>();
+                pieces[gpp.x0, gpp.y0] = pieceList[gpp.pieceListIndex];
+                pieceList[gpp.pieceListIndex].pieceListIndex = gpp.pieceListIndex;
+                Destroy(gpp.gameObject);
+                removesOld.Add(gpp);
+                removesNew.Add(pieceList[gpp.pieceListIndex]);
             }
+
+            foreach (GridPuzzlePiece gpp in removesOld)
+                removes.Remove(gpp);
+            foreach (GridPuzzlePiece gpp in removesNew)
+                removes.Add(gpp);
+
         }
 
         // scale all pieces that are vanishing
