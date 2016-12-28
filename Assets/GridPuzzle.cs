@@ -41,6 +41,15 @@ public class GridPuzzle : MonoBehaviour {
 
     public PuzzleConsole console;
 
+    // alphas for each morph type
+    public float[] alphas;
+
+    // rotations for each type
+    Quaternion[] rotations;
+    Quaternion[] fromRots;
+    Quaternion[] targetRots;
+    float[] lerps;
+
     enum State
     {
         Collapsed,
@@ -62,6 +71,8 @@ public class GridPuzzle : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        numTypes = 4; // TODO templates.Count;
+
         pieceList = new GridPuzzlePiece[columns * rows];
         pieces = new GridPuzzlePiece[columns, rows];
         positions = new Vector3[columns, rows];
@@ -74,12 +85,13 @@ public class GridPuzzle : MonoBehaviour {
                 GameObject obj = Instantiate<GameObject>(piece);
                 obj.transform.parent = transform;
                 obj.transform.localPosition = GetPos(i, j);
+                obj.transform.localRotation = Quaternion.identity;
                 positions[i, j] = obj.transform.position;
                 obj.name = "piece_" + i + "_" + j;
                 GridPuzzlePiece gpp = obj.GetComponent<GridPuzzlePiece>();
                 gpp.x0 = i;
                 gpp.y0 = j;
-                gpp.index = Random.Range(0, 4);
+                gpp.index = Random.Range(0, numTypes);
                 obj.GetComponent<MeshRenderer>().material.color = colors[gpp.index];
                 gpp.puzzle = this;
                 pieceList[k] = gpp; k++;
@@ -91,6 +103,19 @@ public class GridPuzzle : MonoBehaviour {
         rules.SetPuzzle(this);
 
         state = State.Waiting;
+
+        alphas = new float[numTypes];
+        rotations = new Quaternion[numTypes];
+        fromRots = new Quaternion[numTypes];
+        targetRots = new Quaternion[numTypes];
+        lerps = new float[numTypes];
+
+        for (int i = 0; i < numTypes; i++)
+        {
+            rotations[i] = Quaternion.identity;
+            targetRots[i] = Quaternion.identity;
+            lerps[i] = 1.1f;
+        }
 	}
 
     void Update()
@@ -112,6 +137,33 @@ public class GridPuzzle : MonoBehaviour {
             case State.Refilling:
                 UpdateRefilling();
                 break;
+        }
+
+        // update rotations and morphs for each type
+        for (int k = 0; k < numTypes; k++)
+        {
+            alphas[k] = 0.5f + Mathf.Sin((k + 1) * Time.time * 0.5f); // TODO?
+
+            if (lerps[k] >= 1.0f)
+            {
+                lerps[k] = 0;
+                fromRots[k] = targetRots[k];
+                targetRots[k] = Quaternion.Euler(Random.Range(0, 360), Random.Range(0, 360), Random.Range(0, 360));
+            }
+            else
+            {
+                lerps[k] += Time.deltaTime * 0.1f * (8- k);
+                rotations[k] = Quaternion.Slerp(fromRots[k], targetRots[k], lerps[k]);
+            }
+        }
+        bool first = true;
+        foreach (GridPuzzlePiece gpp in pieceList)
+        {
+            gpp.transform.rotation = rotations[gpp.index];
+            Morph morph = gpp.GetComponent<Morph>();
+            if (morph && first)
+                morph.alpha = alphas[gpp.index];
+            first = false;
         }
     }
 
