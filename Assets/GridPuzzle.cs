@@ -10,7 +10,7 @@ public class GridPuzzle : MonoBehaviour {
 
     // the template for spawning pieces (to be replaced by array later)
     public GameObject piece;
-    public Color[] colors = { Color.red, Color.blue, Color.cyan, Color.yellow };
+    public Color[] colors = { Color.red *0.5f, Color.blue *0.5f, Color.cyan *0.5f, Color.yellow*0.5f };
     public int numTypes = 4;
 
     // currently selected piece

@@ -68,13 +68,20 @@
 				half3 dir = normalize(_WorldSpaceCameraPos - i.worldVertex);
 				float spec = max(0, dot(refl, dir));
 
-				spec = spec*spec*spec*spec;
+				//spec = spec*spec*spec*spec;
+				float angle = max(0, 1*dot(i.normal, dir));
+				int iangle = angle;
+				angle = angle - iangle;
+				float r0 = angle;
+				float b0 = 1 - angle;
+				float g0 = (0.25-(0.5-angle)*(0.5-angle))*4
+
 
 				// factor in the light color
 				//o.diff = nl * _LightColor0;
 				// apply fog
 				UNITY_APPLY_FOG(i.fogCoord, col);	
-				return col*nl + spec*fixed4(1,1,1,1);
+				return col*nl + spec*fixed4(r0,g0,b0,1);
 			}
 			ENDCG
 		}
