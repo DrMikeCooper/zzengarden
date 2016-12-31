@@ -3,11 +3,10 @@ using System.Collections;
 
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
-
 public class MorphBall : Morph {
 
     // parametric value
-    MeshFilter meshFilter;
+   
 
     int numPoints = 5;
     int numVerts;
@@ -99,7 +98,6 @@ public class MorphBall : Morph {
             }
         }
 
-        alphaLast = 0;
         meshFilter.mesh.vertices = ballPos;
         meshFilter.mesh.normals = ballNorm;
         meshFilter.mesh.uv = uvs;
